@@ -6,21 +6,20 @@ const port = 2700;
 
 app.get("/getdata", async (req, res) => {
   try {
-    const { page = 1, limit = 3 } = req.params;
+    const { page = 1, limit = 3 } = req.query;
 
-    const pagesnum = parseInt(page);
-    const limitsnum = parseInt(limit);
+    const pagenum = parseInt(page);
+    const limitnum = parseInt(limit);
 
-    const offset = (pagesnum - 1) * limitsnum;
+    const offsetnum = (pagenum - 1) * limitnum;
 
     const result = await pool.query(
-      "select * from employees order by id limit $1 offset $2",
-      [limitsnum, offset]
+      "SELECT * FROM employees order by id LIMIT $1 OFFSET $2",
+      [limitnum, offsetnum]
     );
     return res.status(200).json({ data: result.rows });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 });
-
 app.listen(port, () => console.log(`Server Started AT port ${port}`));
