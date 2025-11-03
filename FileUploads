@@ -20,4 +20,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+
+
+///////////////////////// APP.js///////////////////////////////////////////////
+app.post("/uploadfile", upload.single("file"), async (req, res) => {
+  try {
+    const file = req.file;
+
+    const savedpath = `upload/${file.originalname}`;
+
+    const ImageQuery = "INSERT INTO fileupload (filepath) VALUES ($1)";
+
+    await pool.query(ImageQuery, [savedpath]);
+
+    return res.status(201).json({ message: "file send succesfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 module.exports = upload;
