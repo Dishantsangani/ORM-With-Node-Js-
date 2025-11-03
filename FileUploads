@@ -1,0 +1,23 @@
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+
+const direactionPath = path.resolve(__dirname, "upload");
+
+if (!fs.existsSync(direactionPath)) {
+  fs.mkdirSync(direactionPath);
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, direactionPath);
+  },
+  filename: (req, file, cb) => {
+    const uniquename = Date.now() + "-" + file.originalname;
+    cb(null, uniquename);
+  },
+});
+
+const upload = multer({ storage });
+
+module.exports = upload;
